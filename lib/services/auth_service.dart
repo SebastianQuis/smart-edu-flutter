@@ -1,0 +1,106 @@
+
+import 'dart:convert';
+
+import 'package:flutter/material.dart';
+
+import 'package:http/http.dart' as http;
+
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+
+class AuthService extends ChangeNotifier {
+
+  final String _baseURL = 'identitytoolkit.googleapis.com';
+  final String _fireBaseToken = 'AIzaSyD7gyb_La8kTBeKbv0QGgGQIExQQabUU4Q';
+  
+  final storage = FlutterSecureStorage();
+  bool isLoading = false;
+
+
+  Future<String?> createUser( String email, String password) async {
+
+    final Map<String, dynamic> authData = {
+      'email' : email,
+      'password' : password
+    };
+
+    final url = Uri.https(_baseURL, '/v1/accounts:signUp', {
+      'key': _fireBaseToken,
+    });
+
+    final resp = await http.post(url, body: json.encode(authData));
+    final Map<String, dynamic> decodedResp = json.decode(resp.body);
+
+    if (decodedResp.containsKey('idToken')) {
+      await storage.write(key: 'idToken', value: decodedResp['idToken']);
+      // usuario = UsuarioResponse.fromJson(json.decode(resp.body)); 
+      return null;
+    } else {
+      return decodedResp['error']['message'];
+    }
+  }
+
+  Future<String?> login(String email, String password) async {
+    final Map<String, dynamic> autenticacionData = {
+      'email': email,
+      'password': password,
+      'returnSecureToken': true,
+    };
+
+    final url = Uri.https(_baseURL, 'v1/accounts:signInWithPassword', {
+      'key': _fireBaseToken, 
+    });
+
+    final respuesta = await http.post(url, body: json.encode(autenticacionData));
+    final Map<String, dynamic> respuestaDecodificada = json.decode(respuesta.body);
+    
+    if (respuestaDecodificada.containsKey('idToken')) {
+      await storage.write(key: 'idToken', value: respuestaDecodificada['idToken']);
+      // print(await storage.read(key: 'idToken'));
+      // if (savePassword == true) {
+      //   Preferences.correo = respuestaDecodificada['email'];
+      // }
+      // usuario = UsuarioResponse.fromJson(respuestaDecodificada); //TODO mantener usuario en  sharedpreferences
+      return null;
+    } else {
+      return respuestaDecodificada['error']['message'];
+    }
+  }
+
+  // Future<String> leerToken() async {
+  //   return await storage.read(key: 'idToken') ?? '';
+  // }
+
+  Future<String?> recuperarClave(String email) async {
+
+    final Map<String, dynamic> recuperarData = {
+      'email': email,
+      'requestType': 'PASSWORD_RESET',
+    };
+
+    final url = Uri.https(_baseURL, 'v1/accounts:sendOobCode', {
+      'key': _fireBaseToken, 
+    });
+
+    isLoading = true;
+    notifyListeners();
+    
+    final resp = await http.post(url, body: json.encode(recuperarData));
+    final Map<String, dynamic> respDecodificada = jsonDecode(resp.body);
+
+    isLoading = false;
+    notifyListeners();
+
+    if (respDecodificada.containsKey('email')) {
+      return null;
+    } else {
+      return respDecodificada['error']['message'];
+    }
+  }
+
+
+
+
+
+
+}
+
