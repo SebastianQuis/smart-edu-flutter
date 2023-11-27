@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import 'package:smart_edu_app/drawer/drawer_menu.dart';
-import 'package:smart_edu_app/screens/contenido_screen.dart';
+import 'package:smart_edu_app/services/services.dart';
 import 'package:smart_edu_app/widgets/widgets.dart';
+import 'package:smart_edu_app/screens/screens.dart';
  
 class CursosScreen extends StatelessWidget {
   static const nombre = 'CursosScreen';
@@ -41,7 +43,9 @@ class CursosBody extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    final courseService = Provider.of<CourseService>(context);
+
+    return SizedBox(
       width: double.infinity,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -55,7 +59,8 @@ class CursosBody extends StatelessWidget {
             ], 
             sizeWidth: 0.9, 
             title: 'Razonamiento Matemático',
-            onTap: () { 
+            onTap: () {
+              courseService.course = 'razonamientoMatematico';
               Navigator.pushNamed(context, ContenidoScreen.nombre);
             }, 
           ),
@@ -69,7 +74,8 @@ class CursosBody extends StatelessWidget {
             sizeWidth: 0.85, 
             title: 'Literatura española',
             onTap: () { 
-
+              courseService.course = 'literaturaEspañola';
+              Navigator.pushNamed(context, ContenidoScreen.nombre);
             }, 
           ),
           
@@ -82,7 +88,8 @@ class CursosBody extends StatelessWidget {
             sizeWidth: 0.8, 
             title: 'Biologia',
             onTap: () { 
-
+              courseService.course = 'biologia';
+              Navigator.pushNamed(context, ContenidoScreen.nombre);
             }, 
           ),
 

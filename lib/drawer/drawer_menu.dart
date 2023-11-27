@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:smart_edu_app/screens/avance_screen.dart';
-import 'package:smart_edu_app/screens/cursos_screen.dart';
-import 'package:smart_edu_app/screens/home_screen.dart';
-import 'package:smart_edu_app/screens/login_screen.dart';
-import 'package:smart_edu_app/screens/perfil_screen.dart';
+
+import 'package:smart_edu_app/screens/screens.dart';
 
 class DrawerMenu extends StatelessWidget {
   const DrawerMenu({super.key});
@@ -12,13 +9,13 @@ class DrawerMenu extends StatelessWidget {
   Widget build(BuildContext context) {
     
     return Drawer(
-      backgroundColor: Color.fromARGB(255, 255, 255, 255),
+      backgroundColor: const Color.fromARGB(255, 255, 255, 255),
       child: Column(
         children: [
           
           _DrawerCabecera(),
 
-          ListTile(
+          const ListTile(
             title: Center(child: Text('Jonathan R.', style: TextStyle(fontSize: 22, fontWeight: FontWeight.w600),)),
             subtitle: Center(child: Text('jonathan@smartedu.com', style: TextStyle(fontSize: 16),)),
           ),
@@ -51,18 +48,14 @@ class DrawerMenu extends StatelessWidget {
             trailing: Icon(Icons.arrow_forward_ios_rounded, size: 20, color: Colors.blue[800],),
           ),
 
-          Spacer(),
+          const Spacer(),
           
           ListTile(
             leading: const Icon(Icons.logout, color: Colors.blue,),
             title: const Text('Cerrar sesión'),
-            onTap: () {
-              // TODO: CERRAR SESION
-              Navigator.pushReplacementNamed(context, LoginScreen.nombre);
-            },
-        ),
+            onTap: () => Navigator.pushReplacementNamed(context, LoginScreen.nombre),
+          ),
           
-
         ],
       ),
     );

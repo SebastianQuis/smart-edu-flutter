@@ -1,6 +1,12 @@
 import 'package:flutter/material.dart';
 
-import 'package:smart_edu_app/screens/screens.dart';
+import 'package:provider/provider.dart';
+
+import 'package:smart_edu_app/models/tema_response.dart';
+import 'package:smart_edu_app/screens/result_screen.dart';
+import 'package:smart_edu_app/services/course_service.dart';
+import 'package:smart_edu_app/widgets/button_custom.dart';
+import 'package:smart_edu_app/widgets/mostrar_alerta.dart';
 
 class EjerciciosScreen extends StatelessWidget {
   static const nombre = 'EjerciciosScreen';
@@ -8,76 +14,80 @@ class EjerciciosScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final courseService = Provider.of<CourseService>(context);
+    final listEjercicios = courseService.temaResponse?.getEjerciciosList();
     
+    if (listEjercicios == null) return const CircularProgressIndicator.adaptive();   
+    List<int> answersCounts = List<int>.filled(4, 0);
+
     return Scaffold(
-
       appBar: AppBar(),
-
       body: Column(
         children: [
-      
-          const Text('Ejercicios', style: TextStyle(fontSize: 22, fontWeight: FontWeight.w600)),   
+
+          const Text('Ejercicios', style: TextStyle(fontSize: 22, fontWeight: FontWeight.w600)),
+          const SizedBox(height: 10,),
           
           Expanded(
             child: ListView.builder(
-              itemCount: 3,
+              itemCount: 4,
               itemBuilder: (context, index) {
-                return _Ejercicio();
+                return _OneExercise(
+                  ejercicio: listEjercicios[index],
+                  index: index,
+                  onAnswerChanged: (int count) {
+                    // print(courseService.answersCount);
+                    answersCounts[index] = count; 
+                    courseService.answersCount = answersCounts.reduce((valor1, valor2) => valor1 + valor2);
+                  },
+                );
               },
             ),
           ),
 
-          Container(
-            margin: const EdgeInsets.symmetric(vertical: 10),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    minimumSize: const Size(150, 40),
-                    backgroundColor: Colors.blue[800],
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8.0),
-                    )
-                  ),
-                  onPressed: (){
-                    Navigator.pushNamed(context, TemaCursoScreen.nombre);
-                  }, 
-                  child: const Text('Atrás', style: TextStyle(color: Colors.white, fontWeight: FontWeight.w600),)
-                ),
-                ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    minimumSize: const Size(150, 40),
-                    backgroundColor: Colors.blue[800],
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8.0),
-                    )
-                  ),
-                  onPressed: (){
-                    Navigator.pushNamed(context, ResultScreen.nombre);
-                  }, 
-                  child: const Text('Enviar', style: TextStyle(color: Colors.white, fontWeight: FontWeight.w600),)
-                ),
-          
-              ],
-            ),
-          )
+          ButtonCustom(
+            paddingH: 20,
+            onPressed: () {
+              if (courseService.answersCount == 0) {
+                mostrarAlerta(context, 'Error', 'Debe seleccionar al menos una opción', [
+                  TextButton(
+                    onPressed: () {
+                      Navigator.pop(context);
+                    }, 
+                    child: const Text('Ok'),
+                  )
+                ]);
+              }
+              Navigator.pushNamed(context, ResultScreen.nombre);
+            }, 
+            nombre: 'Enviar'
+          ),
 
         ],
       ),
-
     );
   }
 }
 
-class _Ejercicio extends StatefulWidget {
+class _OneExercise extends StatefulWidget {
+  final Ejercicio ejercicio;
+  final int index;
+  final ValueChanged<int> onAnswerChanged;
+
+  const _OneExercise({
+    required this.ejercicio,
+    required this.index,
+    required this.onAnswerChanged,
+  });
+  
   @override
-  State<_Ejercicio> createState() => _EjercicioState();
+  State<_OneExercise> createState() => _OneExerciseState();
 }
 
-class _EjercicioState extends State<_Ejercicio> {
+class _OneExerciseState extends State<_OneExercise> {
   int selectedCheckBox = -1;
-  
+  int answersCount = 0;
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -86,87 +96,36 @@ class _EjercicioState extends State<_Ejercicio> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-
-          const Text('Ejercicio 01', style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),),
-          
-          const Text('De cinco futbolistas, donde ninguno tiene la misma cantidad de goles convertidos, se sabe que Claudio tiene dos goles más que Abel, Flavio tiene dos goles más que Roberto, pero uno menos que Abel y Andrés más goles que Roberto, pero menos que Abel. ¿Cuántos goles menos que Claudio tiene Andrés?',
+          Text('Ejercicio ${widget.index + 1 }', style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w600),),
+          Text(widget.ejercicio.enunciado,
             textAlign: TextAlign.justify,
-            style: TextStyle(fontSize: 16),
+            style: const TextStyle(fontSize: 16),
           ),
-
-          Row(
+          Column(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
-              SizedBox(
-                width: 120,
-                child: CheckboxListTile(
-                  title: const Text('1'),
-                  value: selectedCheckBox == 0,
+              for (var i = 0; i < widget.ejercicio.opciones.length; i++)
+                CheckboxListTile(
+                  title: Text(
+                    widget.ejercicio.opciones[i].texto, 
+                    style: TextStyle(color: selectedCheckBox == i ? Colors.indigo : Colors.black, fontWeight:selectedCheckBox == i ? FontWeight.w600 : FontWeight.normal),
+                  ),
+                  value: selectedCheckBox == i,
                   onChanged: (value) {
-                    selectedCheckBox = 0;
+                    if (value == null) return;
+                    selectedCheckBox = i;
+                    int correctIndex = widget.ejercicio.opciones.indexWhere((opcion) => opcion.respuesta);
+                    (selectedCheckBox == correctIndex && value == true) 
+                      ? answersCount = 1
+                      : answersCount = 0;
+                    widget.onAnswerChanged(answersCount);
+                    selectedCheckBox = value ? i : -1;
                     setState(() {});
                   },
                   controlAffinity: ListTileControlAffinity.leading,
                 ),
-              ),
-              SizedBox(
-                width: 120,
-                child: CheckboxListTile(
-                  title: const Text('2'),
-                  value: selectedCheckBox == 1,
-                  onChanged: (value) {
-                    selectedCheckBox = 1;
-                    setState(() {});
-                  },
-                  controlAffinity: ListTileControlAffinity.leading,
-                ),
-              ),
-              SizedBox(
-                width: 120,
-                child: CheckboxListTile(
-                  title: const Text('3'),
-                  value: selectedCheckBox == 2,
-                  onChanged: (value) {
-                    selectedCheckBox = 2;
-                    setState(() {});
-                  },
-                  controlAffinity: ListTileControlAffinity.leading,
-                ),
-              ),
             ],
-          ),
-          
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              SizedBox(
-                width: 120,
-                child: CheckboxListTile(
-                  title: const Text('4'),
-                  value: selectedCheckBox == 3,
-                  onChanged: (value) {
-                    selectedCheckBox = 3;
-                    setState(() {});
-                  },
-                  controlAffinity: ListTileControlAffinity.leading,
-                ),
-              ),
-              SizedBox(
-                width: 120,
-                child: CheckboxListTile(
-                  title: const Text('5'),
-                  value: selectedCheckBox == 4,
-                  onChanged: (value) {
-                    selectedCheckBox = 4;
-                    setState(() {});
-                  },
-                  controlAffinity: ListTileControlAffinity.leading,
-                ),
-              ),
-            ],
-          ),
-
-
+          ),      
         ],
       ),
     );

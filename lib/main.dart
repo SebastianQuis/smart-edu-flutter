@@ -6,13 +6,11 @@ import 'package:smart_edu_app/helpers/helpers.dart';
 import 'package:smart_edu_app/routes/app_routes.dart';
 import 'package:smart_edu_app/services/services.dart';
 
-
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   // await Preferences.init();
   runApp(const AppState());
-} 
-
+}
 
 class AppState extends StatelessWidget {
   const AppState({super.key});
@@ -22,12 +20,14 @@ class AppState extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (context) => AuthService(),),
+        ChangeNotifierProvider(create: (context) => CourseService(),),
+        ChangeNotifierProvider(create: (context) => CourseService(),),
+        ChangeNotifierProvider(create: (context) => UserService(),),
       ],
       child: const MyApp(),
     );
   }
 }
-
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});

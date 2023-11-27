@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-mostrarAlerta( BuildContext context, String title,String descripcion, List<Widget> listActions){
+mostrarAlerta( BuildContext context, String title,String descripcion, List<Widget>? listActions){
 
   if( Platform.isAndroid ) {
     return showDialog(
@@ -32,7 +32,7 @@ mostrarAlerta( BuildContext context, String title,String descripcion, List<Widge
             child: Text(descripcion, style: const TextStyle( fontSize: 14),),
           ),
         ),
-        actions: listActions,
+        actions: listActions ?? [],
       );
     },
   );

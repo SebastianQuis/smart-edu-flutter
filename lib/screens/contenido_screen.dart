@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
+
+import 'package:provider/provider.dart';
+
 import 'package:smart_edu_app/drawer/drawer_menu.dart';
 import 'package:smart_edu_app/screens/screens.dart';
+import 'package:smart_edu_app/services/services.dart';
 import 'package:smart_edu_app/widgets/widgets.dart';
  
 class ContenidoScreen extends StatelessWidget {
@@ -8,9 +12,9 @@ class ContenidoScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return const Scaffold(
 
-      appBar: AppBar(),
+      // appBar: AppBar(),
       
       drawer: DrawerMenu(),
 
@@ -18,7 +22,7 @@ class ContenidoScreen extends StatelessWidget {
         physics: BouncingScrollPhysics(),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
-          children: const [
+          children: [
         
             LogoImage(
               height: 190,
@@ -46,18 +50,21 @@ class ButtonsBody extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final courseService = Provider.of<CourseService>(context);
+
     return Container(
       width: double.infinity,
-      margin: EdgeInsets.symmetric(horizontal: 20),
+      margin: const EdgeInsets.symmetric(horizontal: 20),
       // color: Colors.red,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           
-          Text('Contenido', style: TextStyle(fontSize: 25, fontWeight: FontWeight.w600)),
+          const Text('Contenido', style: TextStyle(fontSize: 25, fontWeight: FontWeight.w600)),
 
           ButtonCustom(
             onPressed: () {
+              courseService.topic = 'tema1';
               Navigator.pushNamed(context, TemaCursoScreen.nombre);
             }, 
             nombre: 'Tema 1'
@@ -65,21 +72,24 @@ class ButtonsBody extends StatelessWidget {
 
           ButtonCustom(
             onPressed: () {
-              
+              courseService.topic = 'tema2';
+              Navigator.pushNamed(context, TemaCursoScreen.nombre);
             }, 
             nombre: 'Tema 2'
           ),
           
           ButtonCustom(
             onPressed: () {
-              
+              courseService.topic = 'tema3';
+              Navigator.pushNamed(context, TemaCursoScreen.nombre);
             }, 
             nombre: 'Tema 3'
           ),
           
           ButtonCustom(
             onPressed: () {
-              
+              courseService.topic = 'tema4';
+              Navigator.pushNamed(context, TemaCursoScreen.nombre);
             }, 
             nombre: 'Tema 4'
           ),

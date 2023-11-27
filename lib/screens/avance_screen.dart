@@ -12,27 +12,27 @@ class AvanceScreen extends StatelessWidget {
       
       appBar: AppBar(),
 
-      drawer: DrawerMenu(),
+      drawer: const DrawerMenu(),
 
       body: SingleChildScrollView(
-        physics: BouncingScrollPhysics(),
+        physics: const BouncingScrollPhysics(),
         child: Container(
-          padding: EdgeInsets.symmetric(horizontal: 20),
+          padding: const EdgeInsets.symmetric(horizontal: 20),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
           
-              SafeArea(child: TitleSubTitle(title: 'Avance', fontiSize: 26,)),
+              const SafeArea(child: TitleSubTitle(title: 'Avance', fontiSize: 26,)),
         
-              Text('Rendimiento de los cursos', style: TextStyle(fontSize: 18, color: Colors.grey),),
+              const Text('Rendimiento de los cursos', style: TextStyle(fontSize: 18, color: Colors.grey),),
 
               Column(
                 children: [
                   _Grafico(advance: 64,course: 'Razonamiento Matemático', color: Colors.green,),
-                  Divider(),
-                  _Grafico(advance: 40,course: 'Razonamiento verbal', color: Colors.red),
-                  Divider(),
-                  _Grafico(advance: 90,course: 'Historial', color: Colors.indigo),
+                  const Divider(),
+                  _Grafico(advance: 40,course: 'Literatura Española', color: Colors.red),
+                  const Divider(),
+                  _Grafico(advance: 90,course: 'Biologia', color: Colors.indigo),
                 ],
               ),
 
@@ -76,7 +76,7 @@ class _Grafico extends StatelessWidget {
       child: PieChart(
         colorList: colorList,
         dataMap:dataMap,
-        animationDuration: Duration(seconds: 2),
+        animationDuration: const Duration(seconds: 2),
         chartRadius: MediaQuery.of(context).size.width / 2,
         // chartType: ChartType.,
         legendOptions: const LegendOptions(

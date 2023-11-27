@@ -1,13 +1,18 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart'
+;
 import 'package:provider/provider.dart';
-import 'package:smart_edu_app/helpers/notificacion_service.dart';
-import 'package:smart_edu_app/providers/login_form_provider.dart';
-import 'package:smart_edu_app/screens/login_screen.dart';
-import 'package:smart_edu_app/services/auth_service.dart';
+
+import 'package:smart_edu_app/helpers/helpers.dart';
+import 'package:smart_edu_app/models/models.dart';
+import 'package:smart_edu_app/providers/providers.dart';
+import 'package:smart_edu_app/screens/screens.dart';
+import 'package:smart_edu_app/services/services.dart';
 import 'package:smart_edu_app/widgets/widgets.dart';
  
 class SignUpScreen extends StatelessWidget {
   static const nombre = 'SignUpScreen';
+
+  const SignUpScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -25,8 +30,8 @@ class SignUpScreen extends StatelessWidget {
             ),
 
             ChangeNotifierProvider(
-              create: (context) => LoginFormProvider(),
-              child: FormBody()
+              create: (context) => UserFormPorvider(),
+              child: const FormBody()
             ),
 
             // SignUpForgotPassword(),
@@ -39,8 +44,7 @@ class SignUpScreen extends StatelessWidget {
 }
 
 class FormBody extends StatefulWidget {
-  const FormBody();
-
+  const FormBody({super.key});
   @override
   State<FormBody> createState() => _FormBodyState();
 }
@@ -51,32 +55,53 @@ class _FormBodyState extends State<FormBody> {
   
   @override
   Widget build(BuildContext context) {
-    final loginForm = Provider.of<LoginFormProvider>(context);
+    final userForm = Provider.of<UserFormPorvider>(context);
+    final userService = Provider.of<UserService>(context);
     final authService = Provider.of<AuthService>(context);
   
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 20),
       child: Form(
-        key: loginForm.formKey,
+        key: userForm.formKey,
         autovalidateMode: AutovalidateMode.onUserInteraction,
         child: Column(
           children: [
       
             InputForm(
               labelText: 'Nombres',
+              onChanged: (value) => userForm.nombre = value,
+              validator: (value) {
+                return (value != null && value.length > 1)
+                  ? null
+                  : 'Ingrese un nombre valido';
+              },
             ),
             
             InputForm(
               labelText: 'Apellidos',
+              onChanged: (value) => userForm.apellidos = value,
+              validator: (value) {
+                return (value != null && value.length > 1)
+                  ? null
+                  : 'Ingrese un apellido valido';
+              },
             ),
             
             InputForm(
               labelText: 'Fecha de nacimiento',
+              onChanged: (value) => userForm.fechaNacimiento = value,
+              textInputType: TextInputType.datetime,
+              validator: (value) {
+                final RegExp regExp = RegExp(r'^\d{2}/\d{2}/\d{4}$');
+                return regExp.hasMatch(value ?? '')
+                  ? null
+                  : 'Ej: 01/01/2023';
+              }
             ),
             
             InputForm(
               textInputType: TextInputType.emailAddress,
-              onChanged: (value) => loginForm.email = value,
+              onChanged: (value) => userForm.email = value,
               labelText: 'Correo electrónico',
               validator: (value) {
                 String pattern =
@@ -100,7 +125,7 @@ class _FormBodyState extends State<FormBody> {
                 icon: Icon( _obscureText ? Icons.visibility : Icons.visibility_off)
               ),
               labelText: 'Contraseña',
-              onChanged: (value) => loginForm.password = value,
+              onChanged: (value) => userForm.password = value,
               validator: (value) {
                 return (value != null && value.length > 5)
                   ? null
@@ -142,30 +167,38 @@ class _FormBodyState extends State<FormBody> {
             ),
       
             ButtonCustom(
-              onPressed: loginForm.isLoading
+              onPressed: userForm.isLoading 
                 ? null
                 : () async {
                   FocusScope.of(context).unfocus();
-                  if (!loginForm.isValidForm()) return;
+                  if (!userForm.isValidForm()) return;
 
-                  loginForm.isLoading = true;
+                  userForm.isLoading = true;
 
-                  await Future.delayed(Duration(seconds: 1));
-                  
-                  print(_isAccepted);
+                  await Future.delayed(const Duration(seconds: 1));
+                  final newUser = UserModel(
+                    apellidos: userForm.apellidos,
+                    correo: userForm.email, 
+                    fechaNacimiento: userForm.fechaNacimiento, 
+                    nombres: userForm.nombre,
+                  );
+
+                  userForm.isLoading = false;
 
                   if (_isAccepted) {
-                    final String? token = await authService.createUser(loginForm.email, loginForm.password);
+                    final String? token = await authService.createUser(userForm.email, userForm.password);
+                    await userService.createUser(newUser);
                     if (token == null) {
                       NotificacionService.showSnackBar('Cuenta creada', Colors.black45);
+                      // ignore: use_build_context_synchronously
                       Navigator.pushReplacementNamed(context, LoginScreen.nombre);
                     } else {
                       NotificacionService.showSnackBar('Cuenta existente', Colors.red);
-                      loginForm.isLoading = false;
+                      userForm.isLoading = false;
                     }
                   } else {
                     NotificacionService.showSnackBar('Aceptar términos y condiciones', Colors.red);
-                    loginForm.isLoading = false;
+                    userForm.isLoading = false;
                   }
 
               }, 

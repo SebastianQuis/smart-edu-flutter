@@ -1,10 +1,41 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:smart_edu_app/models/tema_response.dart';
 
-import 'package:smart_edu_app/screens/ejercicios_screen.dart';
-import 'package:smart_edu_app/widgets/title_subtitle.dart';
- 
+import 'package:smart_edu_app/screens/screens.dart';
+import 'package:smart_edu_app/services/services.dart';
+import 'package:smart_edu_app/widgets/widgets.dart';
+
+
 class TemaCursoScreen extends StatelessWidget {
   static const nombre = 'TemaCursoScreen';
+  const TemaCursoScreen({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final courseService = Provider.of<CourseService>(context);
+
+    return Scaffold(
+      body: FutureBuilder(
+        future: courseService.getCourseTopic(courseService.course!, courseService.topic!),
+        builder: (context, snapshot) {
+          if ( snapshot.hasError) return const Text('Cargando..'); 
+          if ( !snapshot.hasData ) return const Text('Cargando..');
+          
+          // return TemaCursoBody(listCitas: snapshot.data!);
+          // return Text(snapshot.data?.titulo ?? 'ss');
+          return TemaCursoBody(temaResponse: snapshot.data!);
+        },
+      ),
+    );
+  }
+}
+
+ 
+class TemaCursoBody extends StatelessWidget {
+  final TemaResponse temaResponse;
+
+  const TemaCursoBody({required this.temaResponse});
 
   @override
   Widget build(BuildContext context) {
@@ -12,23 +43,23 @@ class TemaCursoScreen extends StatelessWidget {
       appBar: AppBar(),
 
       body: SingleChildScrollView(
-        physics: BouncingScrollPhysics(),
+        physics: const BouncingScrollPhysics(),
         child: Container(
-          margin: EdgeInsets.symmetric(horizontal: 20),
+          margin: const EdgeInsets.symmetric(horizontal: 20),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
-            children: const [
+            children: [
           
-              TitleSubTitle(title: 'Ecuaciones de "2do grado"'),
+              TitleSubTitle(title: temaResponse.titulo!),
         
-              Text('Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla quam velit, vulputate eu pharetra nec, mattis ac neque. Duis vulputate commodo lectus, ac blandit elit tincidunt id. Sed rhoncus, tortor sed eleifend tristique, tortor mauris molestie elit, et lacinia ipsum quam nec dui. Quisque nec mauris sit amet elit iaculis pretium sit amet quis magna. Aenean velit odio, elementum in tempus ut, vehicula eu diam. Pellentesque rhoncus aliquam mattis. Ut vulputate eros sed felis sodales nec vulputate justo hendrerit. Vivamus varius pretium ligula, a aliquam odio euismod sit amet. Quisque laoreet sem sit amet orci ullamcorper at ultricies metus viverra. Pellentesque arcu mauris, malesuada quis ornare accumsan, blandit sed diam.',
+              Text(temaResponse.introduccion!,
                 textAlign: TextAlign.justify,
                 style: TextStyle(fontSize: 16),
               ),
 
-              SizedBox(height: 10,),
+              // SizedBox(height: 10,),
 
-              ImageButtons(),
+              _ImageBodyButton(temaResponse: temaResponse),
         
             ],
           ),
@@ -38,21 +69,31 @@ class TemaCursoScreen extends StatelessWidget {
   }
 }
 
-class ImageButtons extends StatelessWidget {
-  const ImageButtons({super.key});
+class _ImageBodyButton extends StatelessWidget {
+  final TemaResponse temaResponse;
+  const _ImageBodyButton({required this.temaResponse});
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    final courseService = Provider.of<CourseService>(context);
+
+    return SizedBox(
       width: double.infinity,
       child: Column(
         children: [
 
-          Text('Imagen de fórmula', style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500),),
-
-          IconButton(
-            onPressed: (){}, 
-            icon: Icon(Icons.camera_alt_outlined, size: 100,)
+          Container(
+            height: 250,
+            margin: const EdgeInsets.symmetric(vertical: 20),
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(10),
+              child: FadeInImage(
+                placeholder: const AssetImage('assets/loading.gif'),
+                image: NetworkImage(temaResponse.fotoUrl!),
+                filterQuality: FilterQuality.high,
+                fit: BoxFit.cover,
+              ),
+            ),
           ),
 
 
@@ -61,33 +102,34 @@ class ImageButtons extends StatelessWidget {
             children: [
               ElevatedButton(
                 style: ElevatedButton.styleFrom(
-                  minimumSize: Size(150, 40),
+                  minimumSize: const Size(150, 40),
                   backgroundColor: Colors.blue[800],
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(8.0),
                   )
                 ),
                 onPressed: (){}, 
-                child: Text('Atrás', style: TextStyle(color: Colors.white, fontWeight: FontWeight.w600),)
+                child: const Text('Atrás', style: TextStyle(color: Colors.white, fontWeight: FontWeight.w600),)
               ),
               ElevatedButton(
                 style: ElevatedButton.styleFrom(
-                  minimumSize: Size(150, 40),
+                  minimumSize: const Size(150, 40),
                   backgroundColor: Colors.blue[800],
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(8.0),
                   )
                 ),
-                onPressed: (){
+                onPressed: () {
+                  courseService.temaResponse = temaResponse;
                   Navigator.pushNamed(context, EjerciciosScreen.nombre);
                 }, 
-                child: Text('Siguiente', style: TextStyle(color: Colors.white, fontWeight: FontWeight.w600),)
+                child: const Text('Siguiente', style: TextStyle(color: Colors.white, fontWeight: FontWeight.w600),)
               ),
 
             ],
           ),
 
-          SizedBox(height: 20,)
+          const SizedBox(height: 20,)
 
         ],
       ),

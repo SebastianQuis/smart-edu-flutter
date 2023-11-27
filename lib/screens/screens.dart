@@ -1,10 +1,9 @@
-
-
 export 'package:smart_edu_app/screens/avance_screen.dart';
 export 'package:smart_edu_app/screens/contenido_screen.dart';
 export 'package:smart_edu_app/screens/cursos_screen.dart';
 export 'package:smart_edu_app/screens/ejercicios_screen.dart';
 export 'package:smart_edu_app/screens/forgot_password_screen.dart';
+export 'package:smart_edu_app/screens/home_screen.dart';
 export 'package:smart_edu_app/screens/login_screen.dart';
 export 'package:smart_edu_app/screens/new_password_screen.dart';
 export 'package:smart_edu_app/screens/perfil_screen.dart';
@@ -12,4 +11,3 @@ export 'package:smart_edu_app/screens/result_screen.dart';
 export 'package:smart_edu_app/screens/sign_up_screen.dart';
 export 'package:smart_edu_app/screens/tema_curso_screen.dart';
 export 'package:smart_edu_app/screens/terms_condition_screen.dart';
-export 'package:smart_edu_app/screens/home_screen.dart';

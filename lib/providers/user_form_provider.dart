@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 
-class LoginFormProvider extends ChangeNotifier {
+class UserFormPorvider extends ChangeNotifier {
   GlobalKey<FormState> formKey = GlobalKey<FormState>();
-
+  
+  String nombre = '';
+  String apellidos = '';
+  String fechaNacimiento = '';
   String email = '';
   String password = '';
 
@@ -17,3 +20,4 @@ class LoginFormProvider extends ChangeNotifier {
     return formKey.currentState?.validate() ?? false;
   }
 }
+
