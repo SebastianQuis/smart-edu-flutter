@@ -3,15 +3,21 @@ import 'package:flutter/material.dart';
 
 class TitleSubTitle extends StatelessWidget {
   final String title;
-  final String subtitle;
+  String? subtitle;
   final double fontiSize;
 
-  const TitleSubTitle({super.key, required this.title, this.subtitle = '', this.fontiSize = 22});
+  TitleSubTitle({
+    super.key, 
+    required this.title, 
+    this.subtitle, 
+    this.fontiSize = 22
+  });
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 20),
+      // color: Colors.green,
+      padding: const EdgeInsets.symmetric(horizontal: 10),
       width: double.infinity,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -19,7 +25,11 @@ class TitleSubTitle extends StatelessWidget {
 
           Center(child: Text(title, style: TextStyle(fontSize: fontiSize, fontWeight: FontWeight.w700),)),
 
-          Text(subtitle, style: TextStyle(fontSize: 18, color: Colors.grey[700]),),
+          if( subtitle != null )
+            Text(
+              subtitle!, 
+              style: TextStyle(fontSize: 18, color: Colors.grey[700])
+            ),
 
         ],
       ),

@@ -1,19 +1,26 @@
-
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-
 import 'package:http/http.dart' as http;
 
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:smart_edu_app/models/models.dart';
+
 
 class AuthService extends ChangeNotifier {
-
   final String _baseURL = 'identitytoolkit.googleapis.com';
   final String _fireBaseToken = 'AIzaSyD7gyb_La8kTBeKbv0QGgGQIExQQabUU4Q';
   
   final storage = FlutterSecureStorage();
   bool isLoading = false;
+  LoginResponse? loginResponse;
+
+  bool _isMarked = false;
+  bool get isMarked => _isMarked;
+  set isMarked( bool value ) {
+    _isMarked = value;
+    notifyListeners();
+  }
 
 
   Future<String?> createUser( String email, String password) async {
@@ -39,6 +46,7 @@ class AuthService extends ChangeNotifier {
     }
   }
 
+
   Future<String?> login(String email, String password) async {
     final Map<String, dynamic> autenticacionData = {
       'email': email,
@@ -55,20 +63,13 @@ class AuthService extends ChangeNotifier {
     
     if (respuestaDecodificada.containsKey('idToken')) {
       await storage.write(key: 'idToken', value: respuestaDecodificada['idToken']);
-      // print(await storage.read(key: 'idToken'));
-      // if (savePassword == true) {
-      //   Preferences.correo = respuestaDecodificada['email'];
-      // }
-      // usuario = UsuarioResponse.fromJson(respuestaDecodificada); //TODO mantener usuario en  sharedpreferences
+      loginResponse = LoginResponse.fromJson(respuestaDecodificada);
       return null;
     } else {
       return respuestaDecodificada['error']['message'];
     }
   }
 
-  // Future<String> leerToken() async {
-  //   return await storage.read(key: 'idToken') ?? '';
-  // }
 
   Future<String?> recuperarClave(String email) async {
 
@@ -98,8 +99,10 @@ class AuthService extends ChangeNotifier {
   }
 
 
-
-
+  Future logOut() async {
+    await storage.delete(key: 'idToken');
+    return; 
+  }
 
 
 }

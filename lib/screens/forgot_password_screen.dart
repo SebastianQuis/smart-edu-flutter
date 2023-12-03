@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
 import 'package:provider/provider.dart';
-import 'package:smart_edu_app/helpers/notificacion_service.dart';
 
+import 'package:smart_edu_app/helpers/notificacion_service.dart';
 import 'package:smart_edu_app/services/services.dart';
 import 'package:smart_edu_app/widgets/widgets.dart';
  
@@ -28,7 +28,7 @@ class ForgotPasswordScreen extends StatelessWidget {
             child: Column(
               children: [
             
-                const TitleSubTitle(
+                TitleSubTitle(
                   title: '¿Olvidaste tu contraseña?', 
                 ),
           

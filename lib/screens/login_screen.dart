@@ -86,7 +86,7 @@ class _FormBodyState extends State<_FormBody> {
     final loginForm = Provider.of<LoginFormProvider>(context);
 
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 20),
+      padding: const EdgeInsets.symmetric(horizontal: 10),
       child: Form(
         key: loginForm.formKey,
         autovalidateMode: AutovalidateMode.onUserInteraction,

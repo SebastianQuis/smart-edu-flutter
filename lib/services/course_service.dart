@@ -17,29 +17,31 @@ class CourseService extends ChangeNotifier {
 
 
   Future<TemaResponse> getCourseTopic(String course, String tema) async {
-  final url = Uri.https(_baseUrl, '$course/$tema.json');
-  final resp = await http.get(url);
+    final url = Uri.https(_baseUrl, '$course/$tema.json');
+    final resp = await http.get(url);
 
-  if (resp.statusCode == 200) {
-    final Map<String, dynamic> temaResponseJson = json.decode(resp.body);
-    
-    // Obtiene la primera entrada del mapa (el identificador único)
-    final String firstKey = temaResponseJson.keys.first;
-    final Map<String, dynamic> temaData = temaResponseJson[firstKey];
+    if (resp.statusCode == 200) {
+      final Map<String, dynamic> temaResponseJson = json.decode(resp.body);
+      
+      // Obtiene la primera entrada del mapa (el identificador único)
+      final String firstKey = temaResponseJson.keys.first;
+      final Map<String, dynamic> temaData = temaResponseJson[firstKey];
 
-    // Construye el objeto TemaResponse con los datos obtenidos
-    final temaResponse = TemaResponse.fromJson({
-      "ejercicios": temaData["ejercicios"],
-      "fotoUrl": temaData["fotoUrl"],
-      "introduccion": temaData["introduccion"],
-      "titulo": temaData["titulo"],
-    });
+      // Construye el objeto TemaResponse con los datos obtenidos
+      final temaResponse = TemaResponse.fromJson({
+        "ejercicios": temaData["ejercicios"],
+        "fotoUrl": temaData["fotoUrl"],
+        "introduccion": temaData["introduccion"],
+        "titulo": temaData["titulo"],
+      });
 
-    // print(temaResponse.titulo);
-    return temaResponse;
-  } else {
-    throw Exception('Error al obtener el tema');
-  }
+      // print(temaResponse.titulo);
+      return temaResponse;
+    } else {
+      throw Exception('Error al obtener el tema');
+    }
 }
+
+
 
 }

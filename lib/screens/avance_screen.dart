@@ -22,16 +22,16 @@ class AvanceScreen extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
           
-              const SafeArea(child: TitleSubTitle(title: 'Avance', fontiSize: 26,)),
+              TitleSubTitle(title: 'Avance', fontiSize: 24,),
         
-              const Text('Rendimiento de los cursos', style: TextStyle(fontSize: 18, color: Colors.grey),),
+              Text('Rendimiento de los cursos', style: TextStyle(fontSize: 18, color: Colors.grey),),
 
               Column(
                 children: [
                   _Grafico(advance: 64,course: 'Razonamiento Matemático', color: Colors.green,),
-                  const Divider(),
+                  Divider(),
                   _Grafico(advance: 40,course: 'Literatura Española', color: Colors.red),
-                  const Divider(),
+                  Divider(),
                   _Grafico(advance: 90,course: 'Biologia', color: Colors.indigo),
                 ],
               ),
@@ -50,7 +50,7 @@ class _Grafico extends StatelessWidget {
   final double advance;
   final Color color;
 
-  _Grafico({super.key, required this.course, required this.advance, required this.color});
+  const _Grafico({required this.course, required this.advance, required this.color});
 
   @override
   Widget build(BuildContext context) {

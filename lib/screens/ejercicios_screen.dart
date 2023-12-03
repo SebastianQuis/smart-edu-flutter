@@ -3,10 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'package:smart_edu_app/models/tema_response.dart';
-import 'package:smart_edu_app/screens/result_screen.dart';
-import 'package:smart_edu_app/services/course_service.dart';
-import 'package:smart_edu_app/widgets/button_custom.dart';
-import 'package:smart_edu_app/widgets/mostrar_alerta.dart';
+import 'package:smart_edu_app/screens/screens.dart';
+import 'package:smart_edu_app/services/services.dart';
+import 'package:smart_edu_app/widgets/widgets.dart';
 
 class EjerciciosScreen extends StatelessWidget {
   static const nombre = 'EjerciciosScreen';
@@ -15,18 +14,19 @@ class EjerciciosScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final courseService = Provider.of<CourseService>(context);
+    final authService = Provider.of<AuthService>(context);
     final listEjercicios = courseService.temaResponse?.getEjerciciosList();
     
     if (listEjercicios == null) return const CircularProgressIndicator.adaptive();   
     List<int> answersCounts = List<int>.filled(4, 0);
 
     return Scaffold(
-      appBar: AppBar(),
+      appBar: AppBar(
+        title: Text('Ejercicios', style: TextStyle(fontSize: 22, fontWeight: FontWeight.w600, color: Colors.blue[900])),
+        centerTitle: true,
+      ),
       body: Column(
         children: [
-
-          const Text('Ejercicios', style: TextStyle(fontSize: 22, fontWeight: FontWeight.w600)),
-          const SizedBox(height: 10,),
           
           Expanded(
             child: ListView.builder(
@@ -39,6 +39,7 @@ class EjerciciosScreen extends StatelessWidget {
                     // print(courseService.answersCount);
                     answersCounts[index] = count; 
                     courseService.answersCount = answersCounts.reduce((valor1, valor2) => valor1 + valor2);
+                    
                   },
                 );
               },
@@ -47,19 +48,7 @@ class EjerciciosScreen extends StatelessWidget {
 
           ButtonCustom(
             paddingH: 20,
-            onPressed: () {
-              if (courseService.answersCount == 0) {
-                mostrarAlerta(context, 'Error', 'Debe seleccionar al menos una opción', [
-                  TextButton(
-                    onPressed: () {
-                      Navigator.pop(context);
-                    }, 
-                    child: const Text('Ok'),
-                  )
-                ]);
-              }
-              Navigator.pushNamed(context, ResultScreen.nombre);
-            }, 
+            onPressed: () => Navigator.pushNamed(context,ResultScreen.nombre),  
             nombre: 'Enviar'
           ),
 
@@ -90,17 +79,39 @@ class _OneExerciseState extends State<_OneExercise> {
 
   @override
   Widget build(BuildContext context) {
+    final authService = Provider.of<AuthService>(context);
+    final courseService = Provider.of<CourseService>(context);
+
     return Container(
       width: double.infinity,
-      margin: const EdgeInsets.symmetric(horizontal: 10),
+      margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text('Ejercicio ${widget.index + 1 }', style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w600),),
-          Text(widget.ejercicio.enunciado,
+
+          RichText(
             textAlign: TextAlign.justify,
-            style: const TextStyle(fontSize: 16),
+            text: TextSpan(
+              children: [
+                TextSpan(
+                  text: '${widget.index + 1} ',
+                  style: const TextStyle(
+                    color: Colors.black,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 16,
+                  ),
+                ),
+                TextSpan(
+                  text: widget.ejercicio.enunciado,
+                  style: const TextStyle(
+                    color: Colors.black,
+                    fontSize: 16,
+                  ),
+                ),
+              ],
+            ),
           ),
+
           Column(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
@@ -108,19 +119,35 @@ class _OneExerciseState extends State<_OneExercise> {
                 CheckboxListTile(
                   title: Text(
                     widget.ejercicio.opciones[i].texto, 
-                    style: TextStyle(color: selectedCheckBox == i ? Colors.indigo : Colors.black, fontWeight:selectedCheckBox == i ? FontWeight.w600 : FontWeight.normal),
+                    style: TextStyle(
+                      color: selectedCheckBox == i 
+                        ? Colors.indigo 
+                        : Colors.black45, 
+                      fontWeight:selectedCheckBox == i 
+                        ? FontWeight.w600 
+                        : FontWeight.normal  
+                    ),
                   ),
                   value: selectedCheckBox == i,
                   onChanged: (value) {
                     if (value == null) return;
                     selectedCheckBox = i;
                     int correctIndex = widget.ejercicio.opciones.indexWhere((opcion) => opcion.respuesta);
-                    (selectedCheckBox == correctIndex && value == true) 
-                      ? answersCount = 1
-                      : answersCount = 0;
+
+                    if (selectedCheckBox == correctIndex && value == true) {
+                      ++answersCount;
+                    } else if ( answersCount == 0) {
+                      answersCount = 0;
+                    } else {
+                      --answersCount;
+                    }
+                    print(answersCount);
                     widget.onAnswerChanged(answersCount);
+                    // courseService.answersCount == answersCount;
                     selectedCheckBox = value ? i : -1;
                     setState(() {});
+
+                    // print(courseService.answersCount);
                   },
                   controlAffinity: ListTileControlAffinity.leading,
                 ),

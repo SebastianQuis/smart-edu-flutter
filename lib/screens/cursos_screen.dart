@@ -18,18 +18,18 @@ class CursosScreen extends StatelessWidget {
       
       drawer: const DrawerMenu(),
 
-      body: const SingleChildScrollView(
-        physics: BouncingScrollPhysics(),
+      body: SingleChildScrollView(
+        physics: const BouncingScrollPhysics(),
         child: Column(
           children: [
         
             SafeArea(child: TitleSubTitle(title: 'Cursos',fontiSize: 26,)),
         
-            LogoImage(
+            const LogoImage(
               height: 190,
             ),
 
-            CursosBody(),
+            const CursosBody(),
 
           ],
         ),
@@ -74,7 +74,7 @@ class CursosBody extends StatelessWidget {
             sizeWidth: 0.85, 
             title: 'Literatura española',
             onTap: () { 
-              courseService.course = 'literaturaEspañola';
+              courseService.course = 'literatura';
               Navigator.pushNamed(context, ContenidoScreen.nombre);
             }, 
           ),

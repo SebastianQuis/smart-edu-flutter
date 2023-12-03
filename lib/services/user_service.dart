@@ -10,6 +10,9 @@ class UserService extends ChangeNotifier {
 
   final String _baseURL = 'flutter-smart-edu-default-rtdb.firebaseio.com';
   
+  // UserResponse? userLogged;
+  Curso? updatedCourse;
+
   bool _isLoading = false;
   bool get isLoading => _isLoading;
   set isLoading( bool value ) {
@@ -30,6 +33,99 @@ class UserService extends ChangeNotifier {
       return null;
     }
   }
+
+  //  https://flutter-smart-edu-default-rtdb.firebaseio.com/usuarios/-NkCeyMuCJatOiflbfR_/avanceCursos/biologia/tema1.json
+  Future<String> updatedNotaTema({required String id, required String course, required String topic, required int nota }) async {
+    print('peticion');
+    try {
+      isLoading = true;
+      final url = Uri.https(_baseURL,'usuarios/$id/avanceCursos/$course/$topic.json');
+      await http.put(url, body: '$nota');
+      isLoading = false;
+      return 'ok';
+    } catch (e) {
+      return e.toString();
+    }
+  }
+
+  // https://flutter-smart-edu-default-rtdb.firebaseio.com/usuarios.json?orderBy="correo"&equalTo="rafael@gmail.com"
+  Future<String?> getUserByEmail(String email) async {
+    try {
+      final url = Uri.https(_baseURL, 'usuarios.json',{
+        "orderBy": '"correo"',
+        "equalTo": '"$email"',
+      });
+      final respuesta = await http.get(url);
+      // print(respuesta.statusCode);
+      if (respuesta.statusCode == 200) {
+        final dataDecodificada = jsonDecode(respuesta.body);
+        final id = dataDecodificada.keys.first;
+        return id;
+      } else {
+        return null;
+      }
+      
+    } catch (e) {
+      return  null;
+    }
+  }
+
+  // https://flutter-smart-edu-default-rtdb.firebaseio.com/usuarios/-NkCeyMuCJatOiflbfR_/avanceCursos/razonamientoMatematico.json
+  Future getNotasTotales({required String id, required String course}) async {
+    try {
+      final url = Uri.https(_baseURL, 'usuarios/$id/avanceCursos/$course.json');
+      final rspt = await http.get(url);
+      // print(rspt.statusCode);
+      if (rspt.statusCode == 200) {
+        final dataDecodificada = jsonDecode(rspt.body);
+        final cursoResponse = Curso.fromJson(dataDecodificada);
+        // print(cursoResponse);
+        updatedCourse = cursoResponse;
+        // print(updatedCourse!.nota);
+      } else {
+        return null;
+      }
+    } catch (e) {
+      print(e);
+      return null;
+    }
+  }
+
+  Future<String?> updatedNotasTotales({required String id, required String course}) async {
+    try {
+      await getNotasTotales(id: id, course: course);
+      final nota = updatedCourse!.tema1! + updatedCourse!.tema2! + updatedCourse!.tema3! + updatedCourse!.tema4!;
+      
+      final url = Uri.https(_baseURL, 'usuarios/$id/avanceCursos/$course.json');
+    
+      final newCurso = Curso(
+        tema1: updatedCourse!.tema1,
+        tema2: updatedCourse!.tema2,
+        tema3: updatedCourse!.tema3,
+        tema4: updatedCourse!.tema4,
+        nota: nota,
+      );
+
+      final respuesta = await http.put(
+        url,
+        headers: {'Content-Type': 'application/json'},
+        body: json.encode(newCurso.toJson()),
+      );
+
+      if (respuesta.statusCode == 200) {
+        // print('Notas actualizadas correctamente');
+        return 'ok';
+      } else {
+        // print('Error al actualizar notas. Código de estado: ${respuesta.statusCode}');
+        // print('Cuerpo de la respuesta: ${respuesta.body}');
+        return null;
+      }
+    } catch (e) {
+      return e.toString();
+    }
+  }
+
+
 
 
 }

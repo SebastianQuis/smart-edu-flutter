@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:smart_edu_app/models/tema_response.dart';
 
+import 'package:provider/provider.dart';
+
+import 'package:smart_edu_app/models/models.dart';
 import 'package:smart_edu_app/screens/screens.dart';
 import 'package:smart_edu_app/services/services.dart';
-import 'package:smart_edu_app/widgets/widgets.dart';
 
 
 class TemaCursoScreen extends StatelessWidget {
@@ -16,14 +16,14 @@ class TemaCursoScreen extends StatelessWidget {
     final courseService = Provider.of<CourseService>(context);
 
     return Scaffold(
+      // appBar: AppBar(),
+
       body: FutureBuilder(
         future: courseService.getCourseTopic(courseService.course!, courseService.topic!),
         builder: (context, snapshot) {
-          if ( snapshot.hasError) return const Text('Cargando..'); 
-          if ( !snapshot.hasData ) return const Text('Cargando..');
-          
-          // return TemaCursoBody(listCitas: snapshot.data!);
-          // return Text(snapshot.data?.titulo ?? 'ss');
+          if ( snapshot.hasError) return const Center( child: CircularProgressIndicator.adaptive()); 
+          if ( !snapshot.hasData ) return const Center( child: CircularProgressIndicator.adaptive());
+          // print(snapshot.data);
           return TemaCursoBody(temaResponse: snapshot.data!);
         },
       ),
@@ -34,8 +34,7 @@ class TemaCursoScreen extends StatelessWidget {
  
 class TemaCursoBody extends StatelessWidget {
   final TemaResponse temaResponse;
-
-  const TemaCursoBody({required this.temaResponse});
+  const TemaCursoBody({super.key, required this.temaResponse});
 
   @override
   Widget build(BuildContext context) {
@@ -47,18 +46,15 @@ class TemaCursoBody extends StatelessWidget {
         child: Container(
           margin: const EdgeInsets.symmetric(horizontal: 20),
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
             children: [
           
-              TitleSubTitle(title: temaResponse.titulo!),
-        
+              Text('${temaResponse.titulo}', style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w700), maxLines: 2, textAlign: TextAlign.center,),
+
               Text(temaResponse.introduccion!,
                 textAlign: TextAlign.justify,
-                style: TextStyle(fontSize: 16),
+                style: const TextStyle(fontSize: 16),
               ),
-
-              // SizedBox(height: 10,),
-
+              
               _ImageBodyButton(temaResponse: temaResponse),
         
             ],
@@ -76,7 +72,8 @@ class _ImageBodyButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final courseService = Provider.of<CourseService>(context);
-
+    final width = MediaQuery.of(context).size.width;
+    
     return SizedBox(
       width: double.infinity,
       child: Column(
@@ -97,36 +94,19 @@ class _ImageBodyButton extends StatelessWidget {
           ),
 
 
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  minimumSize: const Size(150, 40),
-                  backgroundColor: Colors.blue[800],
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8.0),
-                  )
-                ),
-                onPressed: (){}, 
-                child: const Text('Atrás', style: TextStyle(color: Colors.white, fontWeight: FontWeight.w600),)
-              ),
-              ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  minimumSize: const Size(150, 40),
-                  backgroundColor: Colors.blue[800],
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8.0),
-                  )
-                ),
-                onPressed: () {
-                  courseService.temaResponse = temaResponse;
-                  Navigator.pushNamed(context, EjerciciosScreen.nombre);
-                }, 
-                child: const Text('Siguiente', style: TextStyle(color: Colors.white, fontWeight: FontWeight.w600),)
-              ),
-
-            ],
+          ElevatedButton(
+            style: ElevatedButton.styleFrom(
+              minimumSize: Size(width * 0.8, 40),
+              backgroundColor: Colors.blue[800],
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(8.0),
+              )
+            ),
+            onPressed: () {
+              courseService.temaResponse = temaResponse;
+              Navigator.pushNamed(context, EjerciciosScreen.nombre);
+            }, 
+            child: const Text('Siguiente', style: TextStyle(color: Colors.white, fontWeight: FontWeight.w600),)
           ),
 
           const SizedBox(height: 20,)

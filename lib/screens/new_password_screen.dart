@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+
 import 'package:smart_edu_app/widgets/widgets.dart';
  
 class NewPasswordScreen extends StatelessWidget {
   static const nombre = 'NewPasswordScreen';
+
+  const NewPasswordScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -24,7 +27,7 @@ class NewPasswordScreen extends StatelessWidget {
             
                 // const SafeArea(child: LogoImage(height: 220,)),
             
-                const TitleSubTitle(
+                TitleSubTitle(
                   title: '¿Olvidaste tu contraseña?', 
                 ),
           

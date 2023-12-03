@@ -24,7 +24,7 @@ class SignUpScreen extends StatelessWidget {
         
             const SafeArea(child: LogoImage(height: 200,)),
         
-            const TitleSubTitle(
+            TitleSubTitle(
               title: 'Registro como usuario', 
               subtitle: '¡Parece que eres nuevo con nostros! Crea una cuenta para completar tu experiencia.'
             ),

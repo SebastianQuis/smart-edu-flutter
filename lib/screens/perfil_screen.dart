@@ -1,25 +1,33 @@
 import 'package:flutter/material.dart';
-import 'package:smart_edu_app/drawer/drawer_menu.dart';
 
+import 'package:provider/provider.dart';
+
+import 'package:smart_edu_app/drawer/drawer_menu.dart';
+import 'package:smart_edu_app/helpers/helpers.dart';
+import 'package:smart_edu_app/services/services.dart';
 import 'package:smart_edu_app/widgets/widgets.dart';
- 
+
+
 class PerfilScreen extends StatelessWidget {
   static const nombre = 'PerfilScreen';
+  const PerfilScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    final authService = Provider.of<AuthService>(context);
+    final email = authService.loginResponse!.email;
 
+    return Scaffold(
       appBar: AppBar(),
 
-      drawer: DrawerMenu(),
+      drawer: const DrawerMenu(),
 
       body: SingleChildScrollView(
-        physics: BouncingScrollPhysics(),
+        physics: const BouncingScrollPhysics(),
         child: Column(
           children: [
         
-            SafeArea(child: TitleSubTitle(title: 'Perfil',fontiSize: 26,)),
+            TitleSubTitle(title: 'Perfil',fontiSize: 26,),
             
             Container(
               height: 190,
@@ -32,14 +40,14 @@ class PerfilScreen extends StatelessWidget {
             ),
         
             TitleSubTitle(
-              title: 'Jonathan R',
+              title: getNameEmail(email),
             ),
             
-            Text('Estudiante', style: TextStyle(fontSize: 18),),
+            const Text('Estudiante', style: TextStyle(fontSize: 18),),
             
-            SizedBox(height: 10,),
+            const SizedBox(height: 10,),
             
-            LogoImage(
+            const LogoImage(
               height: 180,
             ),
 

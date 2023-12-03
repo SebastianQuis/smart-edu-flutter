@@ -1,42 +1,43 @@
 import 'package:flutter/material.dart';
 
 import 'package:provider/provider.dart';
+import 'package:smart_edu_app/helpers/helpers.dart';
 
-import 'package:smart_edu_app/drawer/drawer_menu.dart';
 import 'package:smart_edu_app/screens/screens.dart';
 import 'package:smart_edu_app/services/services.dart';
 import 'package:smart_edu_app/widgets/widgets.dart';
  
 class ContenidoScreen extends StatelessWidget {
   static const nombre = 'ContenidoScreen';
+  const ContenidoScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
+    final authService = Provider.of<AuthService>(context);
+    final email = authService.loginResponse!.email;
 
-      // appBar: AppBar(),
-      
-      drawer: DrawerMenu(),
+    return Scaffold(
+      appBar: AppBar(),
 
       body: SingleChildScrollView(
-        physics: BouncingScrollPhysics(),
+        physics: const BouncingScrollPhysics(),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
         
-            LogoImage(
+            const LogoImage(
               height: 190,
             ),
             
             TitleSubTitle(
-              title: '¡Hola!, Jonathan ¿Listo para aprender?',
+              title: '¡Hola!, ${getNameEmail(email)} ¿Listo para aprender?',
               fontiSize: 26,
               subtitle: 'Escoge de qué manera quieres aprender hoy',
             ),
 
-            SizedBox(height: 10,),
+            const SizedBox(height: 10,),
         
-            ButtonsBody(),
+            const ButtonsBody(),
 
           ],
         ),
@@ -94,14 +95,6 @@ class ButtonsBody extends StatelessWidget {
             nombre: 'Tema 4'
           ),
           
-          
-          ButtonCustom(
-            paddingH: 100,
-            onPressed: () {
-              
-            }, 
-            nombre: 'Atrás'
-          ),
           
         ],
       ),

@@ -1,12 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:smart_edu_app/helpers/get_name_email.dart';
 
 import 'package:smart_edu_app/screens/screens.dart';
+import 'package:smart_edu_app/services/services.dart';
 
 class DrawerMenu extends StatelessWidget {
   const DrawerMenu({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final email = Provider.of<AuthService>(context).loginResponse!.email;
     
     return Drawer(
       backgroundColor: const Color.fromARGB(255, 255, 255, 255),
@@ -15,9 +19,9 @@ class DrawerMenu extends StatelessWidget {
           
           _DrawerCabecera(),
 
-          const ListTile(
-            title: Center(child: Text('Jonathan R.', style: TextStyle(fontSize: 22, fontWeight: FontWeight.w600),)),
-            subtitle: Center(child: Text('jonathan@smartedu.com', style: TextStyle(fontSize: 16),)),
+          ListTile(
+            title: Center(child: Text(getNameEmail(email), style: TextStyle(fontSize: 22, fontWeight: FontWeight.w600),)),
+            subtitle: Center(child: Text(email, style: TextStyle(fontSize: 16),)),
           ),
 
           ListTile(
@@ -53,7 +57,11 @@ class DrawerMenu extends StatelessWidget {
           ListTile(
             leading: const Icon(Icons.logout, color: Colors.blue,),
             title: const Text('Cerrar sesión'),
-            onTap: () => Navigator.pushReplacementNamed(context, LoginScreen.nombre),
+            onTap: () {
+              final authService = Provider.of<AuthService>(context, listen: false);
+              authService.logOut();
+              Navigator.pushReplacementNamed(context, LoginScreen.nombre);
+            }
           ),
           
         ],
