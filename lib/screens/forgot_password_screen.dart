@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:provider/provider.dart';
 
-import 'package:smart_edu_app/helpers/notificacion_service.dart';
+import 'package:smart_edu_app/helpers/helpers.dart';
 import 'package:smart_edu_app/services/services.dart';
 import 'package:smart_edu_app/widgets/widgets.dart';
  
@@ -36,7 +36,7 @@ class ForgotPasswordScreen extends StatelessWidget {
                   keyboardType: TextInputType.emailAddress,
                   focusNode: focusNode,
                   controller: textEditingController,
-                  decoration: InputDecoration(
+                  decoration: const InputDecoration(
                     labelText: 'Correo electrónico'
                   ),
                 ),
@@ -49,7 +49,6 @@ class ForgotPasswordScreen extends StatelessWidget {
                     : () async {
                       await Future.delayed(const Duration(seconds: 1));
                       final String? resp = await authService.recuperarClave(textEditingController.text.trim());
-                      
                       focusNode.requestFocus();
 
                       if (resp == null) {

@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 
 class TitleSubTitle extends StatelessWidget {
@@ -16,7 +15,6 @@ class TitleSubTitle extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      // color: Colors.green,
       padding: const EdgeInsets.symmetric(horizontal: 10),
       width: double.infinity,
       child: Column(

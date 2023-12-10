@@ -1,44 +1,79 @@
 import 'package:flutter/material.dart';
+
 import 'package:pie_chart/pie_chart.dart';
+import 'package:provider/provider.dart';
+
 import 'package:smart_edu_app/drawer/drawer_menu.dart';
-import 'package:smart_edu_app/widgets/title_subtitle.dart';
- 
+import 'package:smart_edu_app/models/models.dart';
+import 'package:smart_edu_app/services/services.dart';
+
+
 class AvanceScreen extends StatelessWidget {
   static const nombre = 'AvanceScreen';
-  
+  const AvanceScreen({super.key});
+
   @override
   Widget build(BuildContext context) {
+    final userService = Provider.of<UserService>(context);
+    final email = Provider.of<AuthService>(context).loginResponse!.email;
+    
     return Scaffold(
       
-      appBar: AppBar(),
+      appBar: AppBar(
+        title: Text('Avance', style: TextStyle(fontSize: 22, fontWeight: FontWeight.w600, color: Colors.blue[900])),
+        centerTitle: true,
+      ),
 
       drawer: const DrawerMenu(),
 
-      body: SingleChildScrollView(
-        physics: const BouncingScrollPhysics(),
-        child: Container(
-          padding: const EdgeInsets.symmetric(horizontal: 20),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-          
-              TitleSubTitle(title: 'Avance', fontiSize: 24,),
-        
-              Text('Rendimiento de los cursos', style: TextStyle(fontSize: 18, color: Colors.grey),),
-
-              Column(
-                children: [
-                  _Grafico(advance: 64,course: 'Razonamiento Matemático', color: Colors.green,),
-                  Divider(),
-                  _Grafico(advance: 40,course: 'Literatura Española', color: Colors.red),
-                  Divider(),
-                  _Grafico(advance: 90,course: 'Biologia', color: Colors.indigo),
-                ],
-              ),
-
-            ],
+      body: SafeArea(
+        child: SingleChildScrollView(
+          child: FutureBuilder(
+            future: userService.getUserByEmail(email),
+            builder: (context, snapshot) {
+              if ( snapshot.hasError) return const Center(child: CircularProgressIndicator.adaptive()); 
+              if ( !snapshot.hasData ) return const Center(child: CircularProgressIndicator.adaptive());              
+              return _AvanceScreenBody(user: userService.userLogged!);
+            },
           ),
         ),
+      ),
+      
+    );
+  }
+}
+
+
+ 
+class _AvanceScreenBody extends StatelessWidget {
+  final UserModel user;
+  const _AvanceScreenBody({
+    required this.user
+  });
+  
+  @override
+  Widget build(BuildContext context) {
+    final cursos = user.avanceCursos;
+
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 20),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+      
+          const Text('Rendimiento de los cursos', style: TextStyle(fontSize: 18, color: Colors.grey),),
+          
+          Column(
+            children: [
+              _Grafico(advance: cursos.razonamientoMatematico.nota!.toDouble(),course: 'Razonamiento Matemático', color: Colors.green,),
+              const Divider(),
+              _Grafico(advance: cursos.literatura.nota!.toDouble(),course: 'Literatura Española', color: Colors.red),
+              const Divider(),
+              _Grafico(advance: cursos.biologia.nota!.toDouble(),course: 'Biologia', color: Colors.indigo),
+            ],
+          ),
+
+        ],
       ),
     );
   }
@@ -54,13 +89,11 @@ class _Grafico extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    
-    double falta = 100 - advance;
-    
+    double notaFinal = advance / 16 * 100;
+
     final dataMap = <String, double>{
-      course: advance,
-      "Falta": falta,
-      // "Historia": 2,
+      course: notaFinal,
+      "Falta": 100 - notaFinal,
     };
 
     final List<Color> colorList = [
@@ -69,8 +102,7 @@ class _Grafico extends StatelessWidget {
     ];
 
     return Container(
-      // color: Colors.red,
-      // margin: EdgeInsets.symmetric(horizontal: 20),
+      margin: const EdgeInsets.symmetric(vertical: 10),
       width: double.infinity,
       height: 200,
       child: PieChart(
@@ -78,30 +110,26 @@ class _Grafico extends StatelessWidget {
         dataMap:dataMap,
         animationDuration: const Duration(seconds: 2),
         chartRadius: MediaQuery.of(context).size.width / 2,
-        // chartType: ChartType.,
         legendOptions: const LegendOptions(
           showLegendsInRow: true,
           legendPosition: LegendPosition.top,
-          // showLegends: true,
           legendTextStyle: TextStyle(
             fontWeight: FontWeight.bold,
             fontSize: 14
           ),
-          // showLegends: true,
         ),
         chartValuesOptions: const ChartValuesOptions(
-              showChartValueBackground: false,
-              showChartValues: true,
-              showChartValuesInPercentage: false,
-              showChartValuesOutside: false,
-              decimalPlaces: 0,
-              
-              chartValueStyle: TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.w600,
-                color: Colors.black,
-              )
-            ),
+          showChartValueBackground: false,
+          showChartValues: true,
+          showChartValuesInPercentage: true,
+          showChartValuesOutside: false,
+          decimalPlaces: 0,
+          chartValueStyle: TextStyle(
+            fontSize: 16,
+            fontWeight: FontWeight.w600,
+            color: Colors.black,
+          )
+        ),
       ),
       
     );

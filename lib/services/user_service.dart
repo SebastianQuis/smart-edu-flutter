@@ -9,8 +9,8 @@ import 'package:smart_edu_app/models/models.dart';
 class UserService extends ChangeNotifier {
 
   final String _baseURL = 'flutter-smart-edu-default-rtdb.firebaseio.com';
-  
-  // UserResponse? userLogged;
+
+  UserModel? userLogged;
   Curso? updatedCourse;
 
   bool _isLoading = false;
@@ -60,11 +60,11 @@ class UserService extends ChangeNotifier {
       if (respuesta.statusCode == 200) {
         final dataDecodificada = jsonDecode(respuesta.body);
         final id = dataDecodificada.keys.first;
+        userLogged = UserModel.fromJson(dataDecodificada[id]);
         return id;
       } else {
         return null;
       }
-      
     } catch (e) {
       return  null;
     }
@@ -75,18 +75,14 @@ class UserService extends ChangeNotifier {
     try {
       final url = Uri.https(_baseURL, 'usuarios/$id/avanceCursos/$course.json');
       final rspt = await http.get(url);
-      // print(rspt.statusCode);
       if (rspt.statusCode == 200) {
         final dataDecodificada = jsonDecode(rspt.body);
         final cursoResponse = Curso.fromJson(dataDecodificada);
-        // print(cursoResponse);
         updatedCourse = cursoResponse;
-        // print(updatedCourse!.nota);
       } else {
         return null;
       }
     } catch (e) {
-      print(e);
       return null;
     }
   }
@@ -95,7 +91,6 @@ class UserService extends ChangeNotifier {
     try {
       await getNotasTotales(id: id, course: course);
       final nota = updatedCourse!.tema1! + updatedCourse!.tema2! + updatedCourse!.tema3! + updatedCourse!.tema4!;
-      
       final url = Uri.https(_baseURL, 'usuarios/$id/avanceCursos/$course.json');
     
       final newCurso = Curso(
@@ -113,20 +108,12 @@ class UserService extends ChangeNotifier {
       );
 
       if (respuesta.statusCode == 200) {
-        // print('Notas actualizadas correctamente');
         return 'ok';
       } else {
-        // print('Error al actualizar notas. Código de estado: ${respuesta.statusCode}');
-        // print('Cuerpo de la respuesta: ${respuesta.body}');
         return null;
       }
     } catch (e) {
       return e.toString();
     }
   }
-
-
-
-
 }
-

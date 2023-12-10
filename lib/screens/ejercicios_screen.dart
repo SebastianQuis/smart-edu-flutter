@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:provider/provider.dart';
 
-import 'package:smart_edu_app/models/tema_response.dart';
+import 'package:smart_edu_app/models/models.dart';
 import 'package:smart_edu_app/screens/screens.dart';
 import 'package:smart_edu_app/services/services.dart';
 import 'package:smart_edu_app/widgets/widgets.dart';
@@ -14,8 +14,7 @@ class EjerciciosScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final courseService = Provider.of<CourseService>(context);
-    final authService = Provider.of<AuthService>(context);
-    final listEjercicios = courseService.temaResponse?.getEjerciciosList();
+    final listEjercicios = courseService.temaResponse?.obtenerEjerciciosAleatorios();
     
     if (listEjercicios == null) return const CircularProgressIndicator.adaptive();   
     List<int> answersCounts = List<int>.filled(4, 0);
@@ -25,9 +24,10 @@ class EjerciciosScreen extends StatelessWidget {
         title: Text('Ejercicios', style: TextStyle(fontSize: 22, fontWeight: FontWeight.w600, color: Colors.blue[900])),
         centerTitle: true,
       ),
+      
       body: Column(
         children: [
-          
+
           Expanded(
             child: ListView.builder(
               itemCount: 4,
@@ -36,10 +36,8 @@ class EjerciciosScreen extends StatelessWidget {
                   ejercicio: listEjercicios[index],
                   index: index,
                   onAnswerChanged: (int count) {
-                    // print(courseService.answersCount);
                     answersCounts[index] = count; 
                     courseService.answersCount = answersCounts.reduce((valor1, valor2) => valor1 + valor2);
-                    
                   },
                 );
               },
@@ -79,8 +77,6 @@ class _OneExerciseState extends State<_OneExercise> {
 
   @override
   Widget build(BuildContext context) {
-    final authService = Provider.of<AuthService>(context);
-    final courseService = Provider.of<CourseService>(context);
 
     return Container(
       width: double.infinity,
@@ -141,13 +137,9 @@ class _OneExerciseState extends State<_OneExercise> {
                     } else {
                       --answersCount;
                     }
-                    print(answersCount);
                     widget.onAnswerChanged(answersCount);
-                    // courseService.answersCount == answersCount;
                     selectedCheckBox = value ? i : -1;
                     setState(() {});
-
-                    // print(courseService.answersCount);
                   },
                   controlAffinity: ListTileControlAffinity.leading,
                 ),

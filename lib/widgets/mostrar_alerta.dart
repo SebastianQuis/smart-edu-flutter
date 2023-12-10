@@ -12,7 +12,6 @@ mostrarAlerta( BuildContext context, String title,String descripcion, List<Widge
         AlertDialog(
           title: Text(title, style: const TextStyle(fontWeight: FontWeight.w700),),
           content: Text(descripcion),
-          // backgroundColor: Colors.grey,
           actions: listActions,
         )
     );
@@ -36,6 +35,4 @@ mostrarAlerta( BuildContext context, String title,String descripcion, List<Widge
       );
     },
   );
-  
-
 }

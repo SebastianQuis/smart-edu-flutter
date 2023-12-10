@@ -37,7 +37,6 @@ class InputForm extends StatelessWidget {
         autocorrect: false,
         enabled: enabled,
         focusNode: focusNode,
-        // autofocus: true,
         keyboardType: textInputType,
         obscureText: obscureText,
         textCapitalization: TextCapitalization.words,
@@ -45,28 +44,14 @@ class InputForm extends StatelessWidget {
         validator: validator,
         initialValue: initialValue,
         controller: textEditingController,
-        // onTapOutside: (event) { // click fuera del teclado
-        //   focusNode.unfocus(); 
-        // },
-        // validator: (value) {
-        //   if ( value == null ) return 'Este campo es obligatorio';
-        //   return value.length < 6 ? 'Este campo es obligatorio' : null;
-        // },
-        // autovalidateMode: AutovalidateMode.onUserInteraction,
         decoration: InputDecoration(
           hintText: hintText ?? '',
           labelText: labelText,
           labelStyle: const TextStyle(color: Colors.black, fontWeight: FontWeight.w700, fontSize: 18),
           floatingLabelBehavior: FloatingLabelBehavior.always,
-          // helperText: 'helperText',
-          
-          // counterText: '3 caracteres',
-          // prefixIcon: Icon( Icons.verified_user_outlined),
           suffixIcon: suffixIcon,
-          // icon: Icon(Icons.abc),
         ),
       ),
     );
-    
   }
 }

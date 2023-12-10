@@ -16,14 +16,12 @@ class TemaCursoScreen extends StatelessWidget {
     final courseService = Provider.of<CourseService>(context);
 
     return Scaffold(
-      // appBar: AppBar(),
 
       body: FutureBuilder(
         future: courseService.getCourseTopic(courseService.course!, courseService.topic!),
         builder: (context, snapshot) {
           if ( snapshot.hasError) return const Center( child: CircularProgressIndicator.adaptive()); 
           if ( !snapshot.hasData ) return const Center( child: CircularProgressIndicator.adaptive());
-          // print(snapshot.data);
           return TemaCursoBody(temaResponse: snapshot.data!);
         },
       ),
@@ -39,16 +37,20 @@ class TemaCursoBody extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(),
+      appBar: AppBar(
+        title: Text('Introducción', style: TextStyle(fontSize: 22, fontWeight: FontWeight.w600, color: Colors.blue[900])),
+        centerTitle: true,
+      ),
 
       body: SingleChildScrollView(
         physics: const BouncingScrollPhysics(),
         child: Container(
           margin: const EdgeInsets.symmetric(horizontal: 20),
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
           
-              Text('${temaResponse.titulo}', style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w700), maxLines: 2, textAlign: TextAlign.center,),
+              Text('${temaResponse.titulo}', style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w700), maxLines: 2),
 
               Text(temaResponse.introduccion!,
                 textAlign: TextAlign.justify,

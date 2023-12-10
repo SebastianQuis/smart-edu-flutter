@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
 import 'package:provider/provider.dart';
-import 'package:smart_edu_app/helpers/helpers.dart';
 
+import 'package:smart_edu_app/helpers/helpers.dart';
 import 'package:smart_edu_app/screens/screens.dart';
 import 'package:smart_edu_app/services/services.dart';
 import 'package:smart_edu_app/widgets/widgets.dart';
@@ -17,7 +17,10 @@ class ContenidoScreen extends StatelessWidget {
     final email = authService.loginResponse!.email;
 
     return Scaffold(
-      appBar: AppBar(),
+      appBar: AppBar(
+        title: Text('Contenido', style: TextStyle(fontSize: 22, fontWeight: FontWeight.w600, color: Colors.blue[900])),
+        centerTitle: true,
+      ),
 
       body: SingleChildScrollView(
         physics: const BouncingScrollPhysics(),
@@ -56,13 +59,10 @@ class ButtonsBody extends StatelessWidget {
     return Container(
       width: double.infinity,
       margin: const EdgeInsets.symmetric(horizontal: 20),
-      // color: Colors.red,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           
-          const Text('Contenido', style: TextStyle(fontSize: 25, fontWeight: FontWeight.w600)),
-
           ButtonCustom(
             onPressed: () {
               courseService.topic = 'tema1';
@@ -94,7 +94,6 @@ class ButtonsBody extends StatelessWidget {
             }, 
             nombre: 'Tema 4'
           ),
-          
           
         ],
       ),

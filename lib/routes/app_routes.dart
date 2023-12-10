@@ -9,19 +9,17 @@ class AppRoutes {
   static Map<String, Widget Function(BuildContext)> getAppRoutes() {
     Map<String, Widget Function(BuildContext)> appRoutes = {};
 
-    appRoutes.addAll( { AvanceScreen.nombre          : ( _ ) => AvanceScreen()} );
-    appRoutes.addAll( { ContenidoScreen.nombre       : ( _ ) => ContenidoScreen()} );
-    appRoutes.addAll( { CursosScreen.nombre          : ( _ ) => CursosScreen()});
-    appRoutes.addAll( { EjerciciosScreen.nombre      : ( _ ) => EjerciciosScreen()});
-    appRoutes.addAll( { ForgotPasswordScreen.nombre  : ( _ ) => ForgotPasswordScreen()});
-    appRoutes.addAll( { LoginScreen.nombre           : ( _ ) => LoginScreen()});
-    appRoutes.addAll( { NewPasswordScreen.nombre     : ( _ ) => NewPasswordScreen()});
-    appRoutes.addAll( { PerfilScreen.nombre          : ( _ ) => PerfilScreen()});
-    appRoutes.addAll( { ResultScreen.nombre          : ( _ ) => ResultScreen()});
-    appRoutes.addAll( { SignUpScreen.nombre          : ( _ ) => SignUpScreen()});
-    appRoutes.addAll( { TemaCursoScreen.nombre       : ( _ ) => TemaCursoScreen()});
-    appRoutes.addAll( { TermsConditionScreen.nombre  : ( _ ) => TermsConditionScreen()});
-    appRoutes.addAll( { HomeScreen.nombre            : ( _ ) => HomeScreen()});
+    appRoutes.addAll( { AvanceScreen.nombre          : ( _ ) => const AvanceScreen()} );
+    appRoutes.addAll( { ContenidoScreen.nombre       : ( _ ) => const ContenidoScreen()} );
+    appRoutes.addAll( { CursosScreen.nombre          : ( _ ) => const CursosScreen()});
+    appRoutes.addAll( { EjerciciosScreen.nombre      : ( _ ) => const EjerciciosScreen()});
+    appRoutes.addAll( { ForgotPasswordScreen.nombre  : ( _ ) => const ForgotPasswordScreen()});
+    appRoutes.addAll( { LoginScreen.nombre           : ( _ ) => const LoginScreen()});
+    appRoutes.addAll( { PerfilScreen.nombre          : ( _ ) => const PerfilScreen()});
+    appRoutes.addAll( { ResultScreen.nombre          : ( _ ) => const ResultScreen()});
+    appRoutes.addAll( { SignUpScreen.nombre          : ( _ ) => const SignUpScreen()});
+    appRoutes.addAll( { TemaCursoScreen.nombre       : ( _ ) => const TemaCursoScreen()});
+    appRoutes.addAll( { HomeScreen.nombre            : ( _ ) => const HomeScreen()});
 
     return appRoutes;
   }

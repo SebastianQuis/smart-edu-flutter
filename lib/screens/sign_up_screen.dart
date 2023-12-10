@@ -34,8 +34,6 @@ class SignUpScreen extends StatelessWidget {
               child: const FormBody()
             ),
 
-            // SignUpForgotPassword(),
-
           ],
         ),
       ),
@@ -60,7 +58,7 @@ class _FormBodyState extends State<FormBody> {
     final authService = Provider.of<AuthService>(context);
   
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 20),
+      padding: const EdgeInsets.symmetric(horizontal: 10),
       child: Form(
         key: userForm.formKey,
         autovalidateMode: AutovalidateMode.onUserInteraction,

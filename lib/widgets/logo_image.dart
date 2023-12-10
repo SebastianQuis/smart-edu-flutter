@@ -7,9 +7,8 @@ class LogoImage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     
-    return Container(
+    return SizedBox(
       width: double.infinity,
-      margin: const EdgeInsets.only(bottom: 10),
       height: height,
       child: const Image(
         image: AssetImage('assets/logo_smart.jpg'),

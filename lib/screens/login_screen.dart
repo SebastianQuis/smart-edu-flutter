@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:smart_edu_app/helpers/notificacion_service.dart';
-import 'package:smart_edu_app/providers/login_form_provider.dart';
 
+import 'package:provider/provider.dart';
+
+import 'package:smart_edu_app/helpers/helpers.dart';
+import 'package:smart_edu_app/providers/providers.dart';
 import 'package:smart_edu_app/screens/screens.dart';
-import 'package:smart_edu_app/services/auth_service.dart';
+import 'package:smart_edu_app/services/services.dart';
 import 'package:smart_edu_app/widgets/widgets.dart';
  
 class LoginScreen extends StatelessWidget {
@@ -15,11 +16,11 @@ class LoginScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: SingleChildScrollView(
-        physics: BouncingScrollPhysics(),
+        physics: const BouncingScrollPhysics(),
         child: Column(
           children: [
         
-            SafeArea(child: LogoImage(height: 220,)),
+            const SafeArea(child: LogoImage(height: 220,)),
         
             TitleSubTitle(
               title: 'Iniciar sesión', 
@@ -28,10 +29,10 @@ class LoginScreen extends StatelessWidget {
 
             ChangeNotifierProvider(
               create: (context) => LoginFormProvider(),
-              child: _FormBody()
+              child: const _FormBody()
             ),
 
-            SignUpForgotPassword(),
+            const SignUpForgotPassword(),
 
           ],
         ),
@@ -47,7 +48,6 @@ class SignUpForgotPassword extends StatelessWidget {
   Widget build(BuildContext context) {
 
     return Container(
-      // color: Colors.red,
       margin: const EdgeInsets.only(top: 10),
       child: Column(
         children: [
@@ -142,6 +142,7 @@ class _FormBodyState extends State<_FormBody> {
       
                   if (token == null) {
                     NotificacionService.showSnackBar('Bienvenido!!', Colors.black45);
+                    // ignore: use_build_context_synchronously
                     Navigator.pushReplacementNamed(context, HomeScreen.nombre);
                   } else {
                     NotificacionService.showSnackBar('Cuenta no existe', Colors.red);

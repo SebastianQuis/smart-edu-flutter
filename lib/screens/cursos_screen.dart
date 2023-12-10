@@ -14,22 +14,23 @@ class CursosScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
 
-      appBar: AppBar(),
+      appBar: AppBar(
+        title: Text('Cursos', style: TextStyle(fontSize: 22, fontWeight: FontWeight.w600, color: Colors.blue[900])),
+        centerTitle: true,
+      ),
       
       drawer: const DrawerMenu(),
 
-      body: SingleChildScrollView(
-        physics: const BouncingScrollPhysics(),
+      body: const SingleChildScrollView(
+        physics: BouncingScrollPhysics(),
         child: Column(
           children: [
-        
-            SafeArea(child: TitleSubTitle(title: 'Cursos',fontiSize: 26,)),
-        
-            const LogoImage(
+                
+            LogoImage(
               height: 190,
             ),
 
-            const CursosBody(),
+            CursosBody(),
 
           ],
         ),
@@ -91,9 +92,7 @@ class CursosBody extends StatelessWidget {
               courseService.course = 'biologia';
               Navigator.pushNamed(context, ContenidoScreen.nombre);
             }, 
-          ),
-
-          
+          ),          
 
         ],
       ),

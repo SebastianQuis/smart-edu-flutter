@@ -1,13 +1,11 @@
 import 'package:flutter/material.dart';
 
 import 'package:provider/provider.dart';
-import 'package:smart_edu_app/helpers/notificacion_service.dart';
-import 'package:smart_edu_app/models/models.dart';
-import 'package:smart_edu_app/screens/contenido_screen.dart';
-import 'package:smart_edu_app/screens/cursos_screen.dart';
 
+import 'package:smart_edu_app/helpers/helpers.dart';
+import 'package:smart_edu_app/screens/screens.dart';
 import 'package:smart_edu_app/services/services.dart';
-import 'package:smart_edu_app/widgets/button_custom.dart';
+import 'package:smart_edu_app/widgets/widgets.dart';
  
 
 class ResultScreen extends StatelessWidget {
@@ -18,7 +16,6 @@ class ResultScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final userService = Provider.of<UserService>(context);
     final email = Provider.of<AuthService>(context).loginResponse!.email; 
-    // print(email); 
 
     return Scaffold(
 
@@ -38,6 +35,7 @@ class ResultScreen extends StatelessWidget {
           ),
         ),
       ),
+
     );
   }
 }
@@ -45,9 +43,7 @@ class ResultScreen extends StatelessWidget {
 
 class ResultScreenBody extends StatelessWidget {
   final String id;
-
   const ResultScreenBody({super.key, required this.id});
-  // const ResultScreenBody({super.key});
   
   @override
   Widget build(BuildContext context) {
@@ -94,21 +90,16 @@ class ResultScreenBody extends StatelessWidget {
             onPressed: userService.isLoading
               ? null
               :  () async {
-
                 final rspt = await userService.updatedNotaTema(id: id, course: courseService.course!, topic: courseService.topic!,nota: courseService.answersCount );
                 await userService.updatedNotasTotales(id: id, course: courseService.course!);
                 if (rspt == 'ok') {
                   NotificacionService.showSnackBar('Notas publicadas', Colors.black45);
+                  // ignore: use_build_context_synchronously
                   Navigator.pushReplacementNamed(context, CursosScreen.nombre);
                 } else {
                   NotificacionService.showSnackBar('Error al publicar notas', Colors.redAccent);
                 }
-
               },
-            // onPressed: () async {
-            //   // await userService.getNotasTotales(id: id, course: courseService.course!);
-            //   await userService.updatedNotasTotales(id: id, course: courseService.course!);
-            // },
             nombre: 'Publicar notas'
           ),
             

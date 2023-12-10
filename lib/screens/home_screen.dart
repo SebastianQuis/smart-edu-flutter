@@ -24,22 +24,18 @@ class HomeScreen extends StatelessWidget {
       drawer: const DrawerMenu(),
 
       body: SingleChildScrollView(
-        physics: BouncingScrollPhysics(),
+        physics: const BouncingScrollPhysics(),
         child: Column(
           children: [
         
-            SafeArea(child: LogoImage(height: 220,)),
+            const SafeArea(child: LogoImage(height: 220,)),
         
             TitleSubTitle(
               title: 'Bienvenido ${getNameEmail(email)}',
             ),
             
-            Text('¿Listo para aprender?'),
-
-            // _FormBody(),
-
-            // SignUpForgotPassword(),
-
+            const Text('¿Listo para aprender?'),
+            
           ],
         ),
       ),

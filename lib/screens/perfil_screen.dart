@@ -18,7 +18,10 @@ class PerfilScreen extends StatelessWidget {
     final email = authService.loginResponse!.email;
 
     return Scaffold(
-      appBar: AppBar(),
+      appBar: AppBar(
+        title: Text('Perfil', style: TextStyle(fontSize: 22, fontWeight: FontWeight.w600, color: Colors.blue[900])),
+        centerTitle: true,
+      ),
 
       drawer: const DrawerMenu(),
 
@@ -26,9 +29,7 @@ class PerfilScreen extends StatelessWidget {
         physics: const BouncingScrollPhysics(),
         child: Column(
           children: [
-        
-            TitleSubTitle(title: 'Perfil',fontiSize: 26,),
-            
+                    
             Container(
               height: 190,
               decoration: const BoxDecoration(
@@ -48,15 +49,7 @@ class PerfilScreen extends StatelessWidget {
             const SizedBox(height: 10,),
             
             const LogoImage(
-              height: 180,
-            ),
-
-            ButtonCustom(
-              paddingH: 20,
-              onPressed: () {
-
-              }, 
-              nombre: 'Atrás'
+              height: 400,
             ),
 
           ],

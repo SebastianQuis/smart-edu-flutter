@@ -17,6 +17,11 @@ class TemaResponse {
 
   String toRawJson() => json.encode(toJson());
 
+  List<Ejercicio> obtenerEjerciciosAleatorios() {
+    final List<String> keys = ejercicios.keys.toList()..shuffle();
+    return keys.map((key) => ejercicios[key]!).toList();
+  }
+
   factory TemaResponse.fromJson(Map<String, dynamic> json) {
     Map<String, dynamic> ejerciciosJson = json['ejercicios'] ?? {};
     Map<String, Ejercicio> ejercicios = ejerciciosJson.map(
@@ -28,7 +33,7 @@ class TemaResponse {
       fotoUrl: json["fotoUrl"],
       introduccion: json["introduccion"],
       titulo: json["titulo"],
-    );
+    );    
   }
 
   Map<String, dynamic> toJson() => {

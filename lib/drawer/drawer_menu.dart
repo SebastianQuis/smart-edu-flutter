@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:smart_edu_app/helpers/get_name_email.dart';
 
+import 'package:smart_edu_app/helpers/helpers.dart';
 import 'package:smart_edu_app/screens/screens.dart';
 import 'package:smart_edu_app/services/services.dart';
 
@@ -20,8 +20,8 @@ class DrawerMenu extends StatelessWidget {
           _DrawerCabecera(),
 
           ListTile(
-            title: Center(child: Text(getNameEmail(email), style: TextStyle(fontSize: 22, fontWeight: FontWeight.w600),)),
-            subtitle: Center(child: Text(email, style: TextStyle(fontSize: 16),)),
+            title: Center(child: Text(getNameEmail(email), style: const TextStyle(fontSize: 22, fontWeight: FontWeight.w600),)),
+            subtitle: Center(child: Text(email, style: const TextStyle(fontSize: 16),)),
           ),
 
           ListTile(

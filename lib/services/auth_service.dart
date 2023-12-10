@@ -12,8 +12,14 @@ class AuthService extends ChangeNotifier {
   final String _fireBaseToken = 'AIzaSyD7gyb_La8kTBeKbv0QGgGQIExQQabUU4Q';
   
   final storage = FlutterSecureStorage();
-  bool isLoading = false;
   LoginResponse? loginResponse;
+  
+  bool _isLoading = false;
+  bool get isLoading => _isLoading;
+  set isLoading( bool value ) {
+    _isLoading = value;
+    notifyListeners();
+  }
 
   bool _isMarked = false;
   bool get isMarked => _isMarked;
@@ -24,7 +30,6 @@ class AuthService extends ChangeNotifier {
 
 
   Future<String?> createUser( String email, String password) async {
-
     final Map<String, dynamic> authData = {
       'email' : email,
       'password' : password
@@ -39,7 +44,6 @@ class AuthService extends ChangeNotifier {
 
     if (decodedResp.containsKey('idToken')) {
       await storage.write(key: 'idToken', value: decodedResp['idToken']);
-      // usuario = UsuarioResponse.fromJson(json.decode(resp.body)); 
       return null;
     } else {
       return decodedResp['error']['message'];
@@ -72,7 +76,6 @@ class AuthService extends ChangeNotifier {
 
 
   Future<String?> recuperarClave(String email) async {
-
     final Map<String, dynamic> recuperarData = {
       'email': email,
       'requestType': 'PASSWORD_RESET',
@@ -83,13 +86,9 @@ class AuthService extends ChangeNotifier {
     });
 
     isLoading = true;
-    notifyListeners();
-    
     final resp = await http.post(url, body: json.encode(recuperarData));
     final Map<String, dynamic> respDecodificada = jsonDecode(resp.body);
-
     isLoading = false;
-    notifyListeners();
 
     if (respDecodificada.containsKey('email')) {
       return null;
@@ -103,7 +102,6 @@ class AuthService extends ChangeNotifier {
     await storage.delete(key: 'idToken');
     return; 
   }
-
 
 }
 
